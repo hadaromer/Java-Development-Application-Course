@@ -16,28 +16,36 @@ public class Entities implements Serializable {
 
     public Entities(PRDEntity entity) {
         this.name = entity.getName();
-        this.population = entity.getPRDPopulation();
+        this.population = 0;
         this.properties = new HashMap<>();
+        this.entities = new ArrayList<>();
         for (PRDProperty property : entity.getPRDProperties().getPRDProperty()) {
             this.properties.put(property.getPRDName(), new Property(property));
         }
+    }
+
+    public void initEntitiesList() {
         this.entities = new ArrayList<>();
         for (int i = 0; i < this.population; i++) {
-            this.entities.add(new Entity(this.name,i, properties));
+            this.entities.add(new Entity(this.name, properties));
         }
     }
 
-    public Entities(Entities other) {
+    public void initEntitiesList(Entities other,boolean isNew) {
+        this.entities = new ArrayList<>();
+        for (int i = 0; i < this.population; i++) {
+            this.entities.add(new Entity(other.getEntities().get(i),isNew));
+        }
+    }
+
+    public Entities(Entities other, boolean isNew) {
         this.name = other.name;
         this.population = other.population;
         this.properties = new HashMap<>();
         for (Property property : other.properties.values()) {
-            this.properties.put(property.getName(), new Property(property));
+            this.properties.put(property.getName(), new Property(property, isNew));
         }
-        this.entities = new ArrayList<>();
-        for (int i = 0; i < this.population; i++) {
-            this.entities.add(new Entity(other.entities.get(i)));
-        }
+        initEntitiesList(other, isNew);
     }
 
     public String getName() {
@@ -62,6 +70,10 @@ public class Entities implements Serializable {
 
     public void setEntities(List<Entity> entities) {
         this.entities = entities;
+    }
+
+    public void addEntity(Entity entity) {
+        this.entities.add(entity);
     }
 
 }

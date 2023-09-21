@@ -9,21 +9,24 @@ import exceptions.InvalidTypeException;
 import resources.generated.PRDAction;
 import validator.Utils;
 
+import java.util.List;
+
 public class Calculation extends Action {
     public enum CalculationType {MULTIPLY, DIVIDE}
+
     private String resultProp;
     private String arg1;
     private String arg2;
     private CalculationType calculationType;
+
     public Calculation(PRDAction action) {
-        super(Actions.CALCULATION, action.getEntity());
+        super(Actions.CALCULATION, action.getEntity(), action.getPRDSecondaryEntity());
         this.resultProp = action.getResultProp();
-        if(action.getPRDMultiply()!=null){
+        if (action.getPRDMultiply() != null) {
             calculationType = CalculationType.MULTIPLY;
             this.arg1 = action.getPRDMultiply().getArg1();
             this.arg2 = action.getPRDMultiply().getArg2();
-        }
-        else {
+        } else {
             calculationType = CalculationType.DIVIDE;
             this.arg1 = action.getPRDDivide().getArg1();
             this.arg2 = action.getPRDDivide().getArg2();
@@ -61,10 +64,11 @@ public class Calculation extends Action {
     public void setCalculationType(CalculationType calculationType) {
         this.calculationType = calculationType;
     }
-    public void Act(World world, Entity entity){
+
+    public void Act(World world, Entity entity, Entity secondEntity, int currentTicks, List<Runnable> actionsForEndTick) {
         Property p = entity.getProperties().get(this.resultProp);
-        String expression1 = ExpressionParser.eval(this.arg1, world, entity);
-        String expression2 = ExpressionParser.eval(this.arg2, world, entity);
+        String expression1 = ExpressionParser.eval(this.arg1, world, entity, secondEntity, currentTicks);
+        String expression2 = ExpressionParser.eval(this.arg2, world, entity, secondEntity, currentTicks);
         if (!Utils.ProperValueForType(p.getType(), expression1)) {
             String source = "Calculation action on " + this.entity + " with value: " + this.arg1;
             throw new InvalidTypeException(Utils.ValueType(expression1), "this calculation", source);
@@ -73,7 +77,7 @@ public class Calculation extends Action {
             String source = "Calculation action on " + this.entity + " with value: " + this.arg2;
             throw new InvalidTypeException(Utils.ValueType(expression2), "this calculation", source);
         }
-        p.setValue(Result(expression1, expression2));
+        p.setValue(Result(expression1, expression2), currentTicks);
     }
 
     private String Result(String arg1, String arg2) {
@@ -81,8 +85,8 @@ public class Calculation extends Action {
         if (calculationType == CalculationType.MULTIPLY) {
             res = Float.parseFloat(arg1) * Float.parseFloat(arg2);
         } else {
-            if(Float.parseFloat(arg2) == 0){
-                throw new DivideZeroException("Action "+ actionType.toString().toLowerCase() +" on entity "+entity);
+            if (Float.parseFloat(arg2) == 0) {
+                throw new DivideZeroException("Action " + actionType.toString().toLowerCase() + " on entity " + entity);
             }
             res = Float.parseFloat(arg1) / Float.parseFloat(arg2);
         }

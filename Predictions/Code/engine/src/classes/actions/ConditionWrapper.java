@@ -13,7 +13,7 @@ public class ConditionWrapper extends Action{
     private List<Action> actionsElse;
 
     public ConditionWrapper(PRDAction action) {
-        super(Actions.CONDITION, action.getEntity());
+        super(Actions.CONDITION, action.getEntity(), action.getPRDSecondaryEntity());
         root = new Condition(action.getPRDCondition());
         actionsThen = new ArrayList<>();
         for(PRDAction act : action.getPRDThen().getPRDAction()){
@@ -26,13 +26,25 @@ public class ConditionWrapper extends Action{
             }
         }
     }
-    public void Act(World world, Entity entity){
-        boolean conditionResult = root.Check(world,entity);
+    public void Act(World world, Entity entity, Entity secondEntity, int currentTicks, List<Runnable> actionsForEndTick){
+        boolean conditionResult = root.Check(world,entity,secondEntity,currentTicks);
         if(conditionResult){
-            actionsThen.forEach(action -> action.Act(world,entity));
+            actionsThen.forEach(action -> action.Act(world,entity,secondEntity,currentTicks,actionsForEndTick));
         }
         else {
-            actionsElse.forEach(action -> action.Act(world,entity));
+            actionsElse.forEach(action -> action.Act(world,entity,secondEntity, currentTicks,actionsForEndTick));
         }
+    }
+
+    public Condition getRoot() {
+        return root;
+    }
+
+    public List<Action> getActionsThen() {
+        return actionsThen;
+    }
+
+    public List<Action> getActionsElse() {
+        return actionsElse;
     }
 }

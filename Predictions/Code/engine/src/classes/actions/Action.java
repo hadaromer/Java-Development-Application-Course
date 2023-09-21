@@ -1,20 +1,25 @@
 package classes.actions;
 
-import classes.Entities;
 import classes.Entity;
 import classes.World;
+import resources.generated.PRDAction;
 
 import java.io.Serializable;
+import java.util.List;
 
 public abstract class Action implements Serializable {
-    public enum Actions {INCREASE, DECREASE, CALCULATION, CONDITION, SET, KILL}
+    public enum Actions {INCREASE, DECREASE, CALCULATION, CONDITION, SET, KILL,REPLACE,PROXIMITY}
 
     protected Actions actionType;
     protected String entity;
+    protected SecondayEntity secondayEntity;
 
-    public Action(Actions actionType, String entity) {
+    public Action(Actions actionType, String entity, PRDAction.PRDSecondaryEntity prdSecondaryEntity) {
         this.actionType = actionType;
         this.entity = entity;
+        if(prdSecondaryEntity!=null){
+            secondayEntity = new SecondayEntity(prdSecondaryEntity);
+        }
     }
 
     public Actions getActionType() {
@@ -33,13 +38,10 @@ public abstract class Action implements Serializable {
         this.entity = entity;
     }
 
-    public void ActOnEntities(World world) {
-        Entities entities = world.getEntities().get(this.entity);
-        for (Entity ent : entities.getEntities()) {
-            Act(world, ent);
-        }
+    public SecondayEntity getSecondayEntity() {
+        return secondayEntity;
     }
 
-    public abstract void Act(World world, Entity entity);
+    public abstract void Act(World world, Entity entity, Entity secondEntity, int currentTicks, List<Runnable> actionsForEndTick);
 
 }

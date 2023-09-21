@@ -1,33 +1,40 @@
 package classes;
 
+import helpers.RandomCreator;
+
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.UUID;
 
 public class Entity implements Serializable {
     String group;
-    int index;
+    UUID entityUuid;
     HashMap<String, Property> properties;
 
-    public Entity(String group,int index, HashMap<String, Property> properties) {
+    private Location location;
+
+    public Entity(String group, HashMap<String, Property> properties) {
         this.group = group;
-        this.index = index;
+        this.entityUuid = UUID.randomUUID();
+        this.location = new Location();
         this.properties = new HashMap<>();
         for (String property : properties.keySet()) {
-            this.properties.put(property, new Property(properties.get(property)));
+            this.properties.put(property, new Property(properties.get(property),true));
         }
     }
 
-    public Entity(Entity other) {
+    public Entity(Entity other, boolean isNew) {
         this.group = other.group;
-        this.index = other.index;
+        this.entityUuid = other.entityUuid;
+        this.location = other.location;
         this.properties = new HashMap<>();
         for (Property property : other.properties.values()) {
-            this.properties.put(property.getName(), new Property(property));
+            this.properties.put(property.getName(), new Property(property,isNew));
         }
     }
 
-    public int getIndex() {
-        return index;
+    public UUID getUuid() {
+        return entityUuid;
     }
 
     public String getGroup() {
@@ -36,6 +43,15 @@ public class Entity implements Serializable {
 
     public HashMap<String, Property> getProperties() {
         return properties;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(int x, int y){
+        this.location.setX(x);
+        this.location.setY(y);
     }
 
 }

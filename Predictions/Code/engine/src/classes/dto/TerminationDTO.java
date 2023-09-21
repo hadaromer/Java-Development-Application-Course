@@ -3,12 +3,14 @@ package classes.dto;
 import classes.Termination;
 
 public class TerminationDTO {
-    int ticks = -1;
-    int seconds = -1;
+    private int ticks = -1;
+    private int seconds = -1;
+    private boolean byUser;
 
     public TerminationDTO(Termination termination) {
         this.ticks = termination.getTicks();
         this.seconds = termination.getSeconds();
+        this.byUser = termination.isByUser();
     }
 
     public int getTicks() {
@@ -19,9 +21,13 @@ public class TerminationDTO {
         return seconds;
     }
 
+    public boolean isByUser() {
+        return byUser;
+    }
+
     @Override
     public String toString() {
-        return "\nBy ticks = " + ticks +
+        return "By ticks = " + ticks +
                 "\nBy seconds = " + seconds +"\n";
     }
 }

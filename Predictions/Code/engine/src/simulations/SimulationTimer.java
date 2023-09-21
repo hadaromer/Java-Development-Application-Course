@@ -7,9 +7,9 @@ import java.util.TimerTask;
 public class SimulationTimer implements Serializable {
     private final long DELAY = 0;
     private final long INTERVAL = 1000;
-    int time;
-    transient Timer timer;
-    transient TimerTask task;
+    private int time;
+    private transient Timer timer;
+    private transient TimerTask task;
 
     public SimulationTimer() {
         this.time = 0;
@@ -17,16 +17,36 @@ public class SimulationTimer implements Serializable {
         this.task = new TimerTask() {
             @Override
             public void run() {
-                AddOne();
+                addOne();
             }
         };
     }
 
-    public void Start(){
+    public void Start() {
         timer.scheduleAtFixedRate(task, DELAY, INTERVAL);
     }
 
-    private void AddOne(){
+    public void Pause() {
+        task.cancel();
+    }
+
+    public void Resume() {
+        // Create a new TimerTask and schedule it
+        task = new TimerTask() {
+            @Override
+            public void run() {
+                addOne();
+            }
+        };
+        timer.scheduleAtFixedRate(task, DELAY, INTERVAL);
+    }
+
+    public void Stop() {
+        task.cancel();
+        timer.cancel();
+    }
+
+    private void addOne() {
         this.time++;
     }
 

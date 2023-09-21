@@ -8,7 +8,7 @@ import java.util.List;
 
 public class RuleDTO {
     String name;
-    List<String> actions;
+    List<ActionDTO> actions;
     int ticks = 1;
     float probability = 1;
 
@@ -16,7 +16,7 @@ public class RuleDTO {
         this.name = rule.getName();
         this.actions = new ArrayList<>();
         for (Action action : rule.getActions()) {
-            actions.add(action.getActionType().toString().toLowerCase());
+            actions.add(new ActionDTO(action));
         }
         this.ticks = rule.getTicks();
         this.probability = rule.getProbability();
@@ -26,7 +26,7 @@ public class RuleDTO {
         return name;
     }
 
-    public List<String> getActions() {
+    public List<ActionDTO> getActions() {
         return actions;
     }
 

@@ -1,0 +1,122 @@
+
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 0;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+.root {
+    -fx-background-image: url("../resources/space.jpeg");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: cover;
+    -fx-font-family: "Roboto", Arial, sans-serif;
+    -fx-font-size: 13px;
+    -fx-text-fill: #fff;
+}
+
+
+/* Button styling */
+.button {
+    -fx-background-color: #32cd32;
+    -fx-text-fill: #000;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 10px;
+    -fx-border-radius: 5px;
+    -fx-cursor: hand;
+    -fx-transition: background-color 0.3s;
+}
+
+.button:hover {
+    -fx-background-color: #00ff00;
+}
+
+
+.text-field {
+    -fx-font-size: 13px;
+    -fx-text-fill: #000;
+    -fx-background-color: #fff;
+    -fx-padding: 5px;
+    -fx-border-radius: 5px;
+    -fx-border-color: #555;
+    -fx-border-width: 1px;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #fff;
+    -fx-font-weight: bold;
+}
+
+.check-box {
+    -fx-font-size: 13px;
+    -fx-text-fill: #fff;
+    -fx-padding: 5px;
+}
+
+.grid-pane {
+    -fx-grid-line-color: #fff;
+}
+
+
+.stackpaneGlobe {
+    -fx-background-image: url("../resources/planet.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 75% 75%;
+    -fx-background-position: center;
+}
+
+.stackpaneGlobeDestroyed {
+    -fx-background-image: url("../resources/blackhole.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 75% 75%;
+    -fx-background-position: center;
+}
+
+.float-label{
+    -fx-background-color: #006400;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 5px 10px;
+    -fx-border-radius: 5px;
+    -fx-border-width: 2px;
+    -fx-border-color: #ffffff;
+}
+
+.decimal-label {
+    -fx-background-color: #007200;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 5px 10px;
+    -fx-border-radius: 5px;
+    -fx-border-width: 2px;
+    -fx-border-color: #ffffff;
+}
+
+.boolean-label, #consistencyLabel, #avgLabel{
+    -fx-background-color: #38b000;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 5px 10px;
+    -fx-border-radius: 5px;
+    -fx-border-width: 2px;
+    -fx-border-color: #ffffff;
+}
+
+.string-label {
+    -fx-background-color: #9ef01a;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 5px 10px;
+    -fx-border-radius: 5px;
+    -fx-border-width: 2px;
+    -fx-border-color: #ffffff;
+}

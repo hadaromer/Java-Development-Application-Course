@@ -17,7 +17,9 @@ public class Validator {
     }
 
     public void Validate() {
-        EnvironmentValidator.ValidateEnvironment(world.getPRDEvironment());
+        ThreadpoolValidator.ValidateThreadpool(world);
+        EnvironmentValidator.ValidateEnvironment(world.getPRDEnvironment());
+        GridValidator.ValidateThreadpool(world.getPRDGrid());
         setEnvProperties();
         EntitiesValidator.ValidateEntities(world.getPRDEntities());
         SetEntities();
@@ -27,7 +29,7 @@ public class Validator {
 
     public void setEnvProperties() {
         envProperties = new HashMap<>();
-        for (PRDEnvProperty prdProperty : world.getPRDEvironment().getPRDEnvProperty()) {
+        for (PRDEnvProperty prdProperty : world.getPRDEnvironment().getPRDEnvProperty()) {
             envProperties.put(prdProperty.getPRDName(), new Property(prdProperty));
         }
     }

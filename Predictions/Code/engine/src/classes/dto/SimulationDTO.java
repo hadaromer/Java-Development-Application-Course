@@ -6,21 +6,24 @@ import simulations.SimulationTimer;
 import java.util.UUID;
 
 public class SimulationDTO {
-    public enum State {INIT, RUNNING, PAUSED, STOPPED, FINISHED_BY_TICKS, FINISHED_BY_TIME}
+    public enum State {INIT, RUNNING, PAUSED,ONE_FORWARD,ONE_PREVIOUS, STOPPED, FINISHED_BY_TICKS, FINISHED_BY_TIME,ERROR}
 
-    UUID uuid;
-    String startDate;
-    WorldDTO world;
-    int currentTicks;
-    SimulationTimer simulationTimer;
-    State state;
+    private UUID uuid;
+    private String startDate;
+    private WorldDTO world;
+    private int currentTicks;
+    private int currentTime;
+    private State state;
+    private String errorMessage;
 
     public SimulationDTO(Simulation simulation) {
         this.uuid = simulation.getUuid();
         this.world = new WorldDTO(simulation.getWorld());
         this.currentTicks = simulation.getCurrentTicks();
+        this.currentTime = simulation.getTime();
         this.state = SimulationDTO.State.values()[simulation.getState().ordinal()];
         this.startDate = simulation.getStartDate();
+        this.errorMessage = simulation.getErrorMessage();
     }
 
     public UUID getUuid() {
@@ -39,12 +42,29 @@ public class SimulationDTO {
         return currentTicks;
     }
 
-    public SimulationTimer getSimulationTimer() {
-        return simulationTimer;
+    public int getCurrentTime() {
+        return currentTime;
     }
 
     public State getState() {
         return state;
+    }
+
+    public void updateSimulation(SimulationDTO other) {
+        this.world = other.world;
+        this.currentTime = other.currentTime;
+        this.currentTicks = other.currentTicks;
+        this.startDate = other.startDate;
+        this.state = other.state;
+        this.errorMessage = other.errorMessage;
+    }
+
+    public boolean isSameState(SimulationDTO other){
+        return this.state == other.state && this.currentTicks == other.currentTicks;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
     }
 
     @Override

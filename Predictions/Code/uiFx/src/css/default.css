@@ -1,0 +1,124 @@
+
+.root {
+    -fx-background-color: #f0f0f0;
+    -fx-font-family: Arial, sans-serif;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 0;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.label {
+    -fx-font-size: 15px;
+    -fx-text-fill: #333;
+}
+
+.button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: #fff;
+    -fx-font-size: 15px;
+    -fx-padding: 5px 10px;
+    -fx-border-radius: 10px;
+}
+
+#queueButton {
+    -fx-background-color: #24cb80;
+}
+
+#stopButton{
+    -fx-background-color: #fd0000;
+
+}
+#rerunButton{
+    -fx-background-color: #d9ff33;
+
+}
+
+#pauseResumeButton{
+    -fx-background-color: #24cb80;
+
+}
+
+.button:hover {
+    -fx-background-color: #2980b9;
+}
+
+.text-field {
+    -fx-font-size: 15px;
+    -fx-padding: 5px;
+}
+
+
+.table-view {
+    -fx-background-color: #fff;
+}
+
+.table-cell {
+    -fx-font-size: 15px;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #3498db;
+    -fx-text-fill: #fff;
+}
+
+.stackpaneGlobe {
+    -fx-background-image: url("../resources/earth.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 75% 75%;
+    -fx-background-position: center;
+}
+
+.stackpaneGlobeDestroyed {
+    -fx-background-image: url("../resources/destroyed-planet.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 75% 75%;
+    -fx-background-position: center;
+}
+
+.float-label{
+    -fx-background-color: #ffd166;
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-padding: 5px 10px;
+    -fx-border-radius: 5px;
+    -fx-border-width: 2px;
+    -fx-border-color: #ffffff;
+}
+
+.decimal-label {
+    -fx-background-color: #06d6a0;
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-padding: 5px 10px;
+    -fx-border-radius: 5px;
+    -fx-border-width: 2px;
+    -fx-border-color: #ffffff;
+}
+
+.boolean-label, #consistencyLabel, #avgLabel{
+    -fx-background-color: #118ab2;
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-padding: 5px 10px;
+    -fx-border-radius: 5px;
+    -fx-border-width: 2px;
+    -fx-border-color: #ffffff;
+}
+
+.string-label {
+    -fx-background-color: #073b4c;
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-padding: 5px 10px;
+    -fx-border-radius: 5px;
+    -fx-border-width: 2px;
+    -fx-border-color: #ffffff;
+}

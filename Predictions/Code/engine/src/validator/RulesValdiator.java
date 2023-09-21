@@ -33,8 +33,6 @@ public class RulesValdiator {
 
     public static void ValidateRule(PRDRule rule) {
         SOURCE = ROOT + " " + rule.getName();
-        if (Utils.isContainsSpace(rule.getName()))
-            throw new InvalidWhiteSpaceException(rule.getName(), SOURCE);
 
         for (PRDAction action : rule.getPRDActions().getPRDAction()) {
             ActionValidator.ValidateAction(action, SOURCE);

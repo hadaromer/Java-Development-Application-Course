@@ -1,0 +1,104 @@
+
+ .root{
+    -fx-background-image: url("../resources/barbieWorld.jpg");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+     -fx-background-size: cover;
+    -fx-font-family: "Comic Sans MS", cursive;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 0;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+
+ .label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #fff;
+    -fx-background-color: #ff69b4;
+}
+
+ .button {
+    -fx-background-color: #ff69b4;
+    -fx-text-fill: #fff;
+    -fx-font-size: 14px;
+}
+
+ .button:hover {
+    -fx-background-color: #ff1493;
+}
+
+ .text-field {
+    -fx-font-size: 14px;
+    -fx-text-fill: #ff69b4;
+    -fx-background-color: #fff;
+}
+
+ .check-box {
+     -fx-font-size: 14px; /* Font size */
+     -fx-text-fill: #fff; /* Text color (white) */
+     -fx-padding: 5px; /* Padding for checkboxes */
+     -fx-background-color: #ff69b4;
+ }
+
+ .stackpaneGlobe {
+     -fx-background-image: url("../resources/pinkWorld.png");
+     -fx-background-repeat: no-repeat;
+     -fx-background-size: 75% 75%;
+     -fx-background-position: center;
+ }
+
+ .stackpaneGlobeDestroyed {
+     -fx-background-image: url("../resources/greenWorld.png");
+     -fx-background-repeat: no-repeat;
+     -fx-background-size: 75% 75%;
+     -fx-background-position: center;
+ }
+
+ .float-label{
+     -fx-background-color: #6e44ff;
+     -fx-text-fill: white;
+     -fx-font-size: 14px;
+     -fx-padding: 5px 10px;
+     -fx-border-radius: 5px;
+     -fx-border-width: 2px;
+     -fx-border-color: #ffffff;
+ }
+
+ .decimal-label {
+     -fx-background-color: #b892ff;
+     -fx-text-fill: white;
+     -fx-font-size: 14px;
+     -fx-padding: 5px 10px;
+     -fx-border-radius: 5px;
+     -fx-border-width: 2px;
+     -fx-border-color: #ffffff;
+ }
+
+ .boolean-label, #consistencyLabel, #avgLabel{
+     -fx-background-color: #ffc2e2;
+     -fx-text-fill: white;
+     -fx-font-size: 14px;
+     -fx-padding: 5px 10px;
+     -fx-border-radius: 5px;
+     -fx-border-width: 2px;
+     -fx-border-color: #ffffff;
+ }
+
+ .string-label {
+     -fx-background-color: #ff90b3;
+     -fx-text-fill: white;
+     -fx-font-size: 14px;
+     -fx-padding: 5px 10px;
+     -fx-border-radius: 5px;
+     -fx-border-width: 2px;
+     -fx-border-color: #ffffff;
+ }
+

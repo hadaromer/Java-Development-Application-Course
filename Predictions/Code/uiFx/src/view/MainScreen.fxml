@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AppController">
+   <children>
+      <ScrollPane fx:id="scrollpane" fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">
+         <content>
+            <BorderPane fx:id="mainScreenBorderPane" minHeight="500.0" minWidth="600.0">
+               <top>
+                  <fx:include fx:id="HeaderComponent" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" source="HeaderView.fxml" />
+               </top>
+               <center>
+                  <StackPane minHeight="200.0" minWidth="400.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <fx:include fx:id="SimulationDetailsComponent" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" source="SimulationDetails.fxml" visible="true" />
+                        <fx:include fx:id="NewExecutionComponent" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" source="NewExecution.fxml" visible="false" />
+                        <fx:include fx:id="ResultsComponent" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" source="ResultsView.fxml" visible="false" />
+                     </children>
+                  </StackPane>
+               </center>
+            </BorderPane>
+         </content>
+      </ScrollPane>
+   </children>
+</VBox>

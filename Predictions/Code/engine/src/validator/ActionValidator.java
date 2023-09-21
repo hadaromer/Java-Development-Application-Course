@@ -1,31 +1,76 @@
 package validator;
 
-import exceptions.EntityNotFoundException;
-import exceptions.EntityPropertyNotFoundException;
-import exceptions.InvalidTypeException;
+import exceptions.*;
 import resources.generated.PRDAction;
 import resources.generated.PRDCondition;
 
 public class ActionValidator {
     public static void ValidateAction(PRDAction action, String source) {
-        source += ", " + action.getType() + " on " + action.getEntity();
+        source += ", " + action.getType();
+        ValidateSecondaryEntity(action.getPRDSecondaryEntity(), source);
         switch (action.getType()) {
             case "increase":
             case "decrease":
+                source += " on " + action.getEntity();
                 IncreaseDecreaseValidator(action, source);
                 break;
             case "calculation":
+                source += " on " + action.getEntity();
                 CalculationValidator(action, source);
                 break;
             case "condition":
+                source += " on " + action.getEntity();
                 ConditionValidator(action, source);
                 break;
             case "set":
+                source += " on " + action.getEntity();
                 SetValidator(action, source);
                 break;
             case "kill":
+                source += " on " + action.getEntity();
                 KillValidator(action, source);
                 break;
+            case "replace":
+                ReplaceValidator(action, source);
+                break;
+            case "proximity":
+                ProximityValidator(action, source);
+                break;
+        }
+    }
+
+    private static void ProximityValidator(PRDAction action, String source) {
+        String sourceEntity = action.getPRDBetween().getSourceEntity();
+        String targetEntity = action.getPRDBetween().getTargetEntity();
+        String of =action.getPRDEnvDepth().getOf();
+        validateEntityExists(sourceEntity, source + " on source entity");
+        validateEntityExists(targetEntity, source + " on target entity");
+        String expressionType = getExpressionType(sourceEntity,source,of);
+        if (!Consts.RANGE_TYPES.contains(expressionType)) {
+            throw new InvalidTypeException(expressionType, "must be a decimal", source);
+        }
+        for(PRDAction act : action.getPRDActions().getPRDAction()){
+            ValidateAction(act,source);
+        }
+    }
+
+    private static void ReplaceValidator(PRDAction action, String source) {
+        validateEntityExists(action.getKill(), source + " on kill entity");
+        validateEntityExists(action.getCreate(), source + "on create entity");
+    }
+
+    public static void ValidateSecondaryEntity(PRDAction.PRDSecondaryEntity secondaryEntity, String source) {
+        if (secondaryEntity == null) return;
+        source += ", second entity selection on " + secondaryEntity.getEntity();
+        validateEntityExists(secondaryEntity.getEntity(), source);
+        PRDAction.PRDSecondaryEntity.PRDSelection selection = secondaryEntity.getPRDSelection();
+        if (!selection.getCount().equals("ALL") && Integer.parseInt(selection.getCount()) < 1) {
+            throw new InvalidRangeException("count", "1 - infinity", source);
+        }
+        if (selection.getPRDCondition().getSingularity().equals("single")) {
+            SingleConditionValidator(selection.getPRDCondition(), source);
+        } else {
+            LoopOverConditions(selection.getPRDCondition(), source);
         }
     }
 
@@ -36,19 +81,19 @@ public class ActionValidator {
         validatePropertyTypeForMathCalcs(propertyType, source);
         String expressionType = getExpressionType(action.getEntity(), source, action.getBy());
         if (!expressionType.equals(propertyType) && !(expressionType.equals("decimal") && propertyType.equals("float"))) {
-            if (expressionType.equals("float") && propertyType.equals("decimal")){
+            if (expressionType.equals("float") && propertyType.equals("decimal")) {
                 throw new InvalidTypeException(expressionType, "decimal (can not cast float to decimal)", source);
             }
-                throw new InvalidTypeException(expressionType, "math calculations", source);
+            throw new InvalidTypeException(expressionType, "math calculations", source);
         }
     }
 
-    private static String getExpressionType(String entity, String source, String expression) {
+    public static String getExpressionType(String entity, String source, String expression) {
         String expressionType;
         String helperFunction = HelperFunctionsValidator.isHelperFunction(expression);
         if (!helperFunction.isEmpty()) { // a helper function
-            expression = expression.substring(0, expression.length() - 1).split("\\(")[1]; // remove helper function
-            expressionType = HelperFunctionsValidator.GetFunctionReturnType(helperFunction, expression, source);
+            expression = expression.substring(helperFunction.length()+1, expression.length() - 1); // remove helper function
+            expressionType = HelperFunctionsValidator.GetFunctionReturnType(helperFunction, expression,entity, source);
         } else if (Utils.isPropertyExistsInEntity(entity, expression)) { // property of entity
             expressionType = Utils.PropertyEntityType(entity, expression);
         } else {
@@ -70,6 +115,9 @@ public class ActionValidator {
     }
 
     private static void validateEntityExists(String entity, String source) {
+        if(entity == null){
+            throw new EntityNotProvidedException(source);
+        }
         if (!Utils.isEntityExists(entity)) {
             throw new EntityNotFoundException(entity, source);
         }
@@ -108,7 +156,7 @@ public class ActionValidator {
         for (PRDAction prdAction : action.getPRDThen().getPRDAction()) {
             ValidateAction(prdAction, source);
         }
-        if(action.getPRDElse() != null) {
+        if (action.getPRDElse() != null) {
             for (PRDAction prdAction : action.getPRDElse().getPRDAction()) {
                 ValidateAction(prdAction, source);
             }
@@ -127,8 +175,7 @@ public class ActionValidator {
 
     public static void SingleConditionValidator(PRDCondition singleCondition, String source) {
         validateEntityExists(singleCondition.getEntity(), source);
-        validatePropertyExists(singleCondition.getEntity(), singleCondition.getProperty(), source);
-        String propertyType = Utils.PropertyEntityType(singleCondition.getEntity(), singleCondition.getProperty());
+        String propertyType = getExpressionType(singleCondition.getEntity(), source, singleCondition.getProperty());
         String expressionType = getExpressionType(singleCondition.getEntity(), source, singleCondition.getValue());
         if (!expressionType.equals(propertyType) && !(expressionType.equals("decimal") && propertyType.equals("float"))) {
             throw new InvalidTypeException(expressionType, "the requested condition - excepted: " + propertyType, source);

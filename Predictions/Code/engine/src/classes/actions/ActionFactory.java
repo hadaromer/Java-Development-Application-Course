@@ -18,6 +18,10 @@ public class ActionFactory implements Serializable {
                 return new Set(action);
             case "kill":
                 return new Kill(action);
+            case "replace":
+                return new Replace(action);
+            case "proximity":
+                return new Proximity(action);
             default:
                 return null;
         }

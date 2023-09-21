@@ -21,6 +21,8 @@ public class HistoryManager implements Serializable {
         return history.get(uuid);
     }
 
+    public void deleteRecord(String uuid){ history.remove(uuid);}
+
     public HashMap<String, Simulation> getHistory() {
         return history;
     }

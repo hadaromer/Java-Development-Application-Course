@@ -6,19 +6,25 @@ import resources.generated.PRDProperty;
 import validator.Utils;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Property implements Serializable {
     private enum PropertyFor {ENVIRONMENT, ENTITY}
 
     ;
-    private PropertyFor propertyFor;
-    private String name;
-    private String type;
-    private boolean isRange;
+    private final PropertyFor propertyFor;
+    private final String name;
+    private final String type;
+    private final boolean isRange;
     private boolean isRandomInit;
     private float from;
     private float to;
     private String value;
+    private int numberOfChanges = 0;
+    private List<Integer> changes;
+
+    private int tickValueChanged = 0;
 
     public Property(Object property) {
         if (property.getClass().getSimpleName().equals(PRDEnvProperty.class.getSimpleName())) {
@@ -27,6 +33,7 @@ public class Property implements Serializable {
             name = temp.getPRDName();
             type = temp.getType();
             isRange = temp.getPRDRange() != null;
+            changes = new ArrayList<>();
             if (isRange) {
                 from = (float) temp.getPRDRange().getFrom();
                 to = (float) temp.getPRDRange().getTo();
@@ -36,6 +43,7 @@ public class Property implements Serializable {
             PRDProperty temp = (PRDProperty) property;
             name = temp.getPRDName();
             type = temp.getType();
+            changes = new ArrayList<>();
             isRange = temp.getPRDRange() != null;
             if (isRange) {
                 from = (float) temp.getPRDRange().getFrom();
@@ -43,21 +51,31 @@ public class Property implements Serializable {
             }
             isRandomInit = temp.getPRDValue().isRandomInitialize();
             if (isRandomInit) {
-                setRandomValue();
+                setRandomValue(0);
             } else {
                 value = temp.getPRDValue().getInit();
             }
         }
     }
 
-    public Property(Property other) {
+    public Property(Property other, boolean isNew) {
         this.propertyFor = other.propertyFor;
         this.name = other.name;
         this.type = other.type;
         this.isRange = other.isRange;
         this.from = other.from;
         this.to = other.to;
-        this.value = other.value;
+        this.numberOfChanges = other.numberOfChanges;
+        this.changes = other.changes;
+        if (isNew) {
+            this.changes = new ArrayList<>();
+        }
+        if (isNew && other.isRandomInit) {
+            this.isRandomInit = true;
+            setRandomValue(0);
+        } else {
+            this.value = other.value;
+        }
     }
 
     public int getPropertyForOrdinal() {
@@ -92,35 +110,70 @@ public class Property implements Serializable {
         return value;
     }
 
-    public void setValue(String value) {
-        if (!isRange || Utils.Greater(value, String.valueOf(from)) && Utils.Greater(String.valueOf(to), value)) {
+    public int getTickValueChanged() {
+        return tickValueChanged;
+    }
+
+    public void setValue(String value, int currentTicks) {
+        if (!isRange || Utils.GreaterOrEqual(value, String.valueOf(from)) && Utils.GreaterOrEqual(String.valueOf(to), value)) {
+            if (this.value == null || !this.value.equals(value)) {
+                this.value = value;
+                this.tickValueChanged = currentTicks;
+                numberOfChanges++;
+                changes.add(currentTicks);
+            }
+        }
+    }
+
+    public void setValueForReplace(String value) {
+        if (!isRange || Utils.GreaterOrEqual(value, String.valueOf(from)) && Utils.GreaterOrEqual(String.valueOf(to), value)) {
             this.value = value;
         }
     }
 
-    public void setRandomValue() {
+    public void setRandomValue(int currentTicks) {
         switch (type) {
             case "decimal":
                 if (isRange) {
-                    this.value = String.valueOf(RandomCreator.getInt((int) this.from, (int) this.to));
+                    setValue(String.valueOf(RandomCreator.getInt((int) this.from, (int) this.to)), currentTicks);
                 } else {
-                    this.value = String.valueOf(RandomCreator.getInt());
+                    setValue(String.valueOf(RandomCreator.getInt()), currentTicks);
                 }
                 break;
             case "float":
                 if (isRange) {
-                    this.value = String.valueOf(RandomCreator.getFloat(from, to));
+                    setValue(String.valueOf(RandomCreator.getFloat(from, to)), currentTicks);
                 } else {
-                    this.value = String.valueOf(RandomCreator.getFloat());
+                    setValue(String.valueOf(RandomCreator.getFloat()), currentTicks);
                 }
                 break;
             case "boolean":
-                this.value = String.valueOf(RandomCreator.getBoolean());
+                setValue(String.valueOf(RandomCreator.getBoolean()), currentTicks);
                 break;
             default:
-                this.value = RandomCreator.getString();
+                setValue(RandomCreator.getString(), currentTicks);
                 break;
         }
+    }
+
+    public boolean validateValue(String value) {
+        if (this.isRange()) {
+            float temp = Utils.parseFloat(value, "validate value");
+            return temp >= this.from && temp <= this.to;
+        }
+        return true;
+    }
+
+    public int getNumberOfChanges() {
+        return numberOfChanges;
+    }
+
+    public double getConsistency() {
+        int sum = 0;
+        for (int i = 0; i < changes.size() - 1; i++) {
+            sum += changes.get(i + 1) - changes.get(i);
+        }
+        return (double) sum / changes.size();
     }
 
     @Override
@@ -128,10 +181,9 @@ public class Property implements Serializable {
         String res = "Name = " + name + '\n' +
                 "Type = " + type + '\n';
         if (isRange) {
-            if(type.equals("decimal")) {
-                res += "Range: from= " + (int)from + ", to= " + (int)to + '\n';
-            }
-            else {
+            if (type.equals("decimal")) {
+                res += "Range: from= " + (int) from + ", to= " + (int) to + '\n';
+            } else {
                 res += "Range: from= " + from + ", to= " + to + '\n';
 
             }

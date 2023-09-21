@@ -51,9 +51,6 @@ public class EntitiesValidator {
         SOURCE = ROOT + " " + entity.getName();
         if (Utils.isContainsSpace(entity.getName()))
             throw new InvalidWhiteSpaceException(entity.getName(), SOURCE);
-        if (entity.getPRDPopulation() < 0) {
-            throw new NegativePopulationException(SOURCE);
-        }
         validateUniqueNamesForEntityProperties(entity);
         for (PRDProperty PrdProperty : entity.getPRDProperties().getPRDProperty()) {
             Property property = new Property(PrdProperty);

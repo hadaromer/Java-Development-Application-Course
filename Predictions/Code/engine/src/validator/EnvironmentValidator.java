@@ -2,7 +2,7 @@ package validator;
 
 import exceptions.UniqueNameException;
 import resources.generated.PRDEnvProperty;
-import resources.generated.PRDEvironment;
+import resources.generated.PRDEnvironment;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 public class EnvironmentValidator {
     private static final String PRD_ENV_PROPERTY = PRDEnvProperty.class.getSimpleName();
     private static final String SOURCE = "Environment validation";
-    public static void ValidateEnvironment(PRDEvironment environment) {
+    public static void ValidateEnvironment(PRDEnvironment environment) {
         validateUniquePRDNames(environment);
 
         for (PRDEnvProperty prdEnvProperty : environment.getPRDEnvProperty()) {
@@ -18,7 +18,7 @@ public class EnvironmentValidator {
         }
     }
 
-    private static void validateUniquePRDNames(PRDEvironment environment) {
+    private static void validateUniquePRDNames(PRDEnvironment environment) {
         List<String> envPropertiesnames = environment.getPRDEnvProperty()
                 .stream()
                 .map(PRDEnvProperty::getPRDName)
